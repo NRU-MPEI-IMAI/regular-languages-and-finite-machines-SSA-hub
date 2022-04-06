@@ -1,0 +1,931 @@
+\documentclass{article}
+\usepackage[14pt]{extsizes}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{setspace,amsmath}
+\usepackage{graphicx}
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+\usepackage[pdf]{graphviz}
+\usepackage[table]{xcolor}
+\usepackage{morewrites}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+
+\begin{document} % начало документа
+\begin{center}
+\large{Домашнее задание №1}\\
+\large{Регулярные языки и конечные автоматы}\\
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\end{center}
+
+% СОДЕРЖАНИЕ
+\newpage
+    \tableofcontents % Вывод содержания
+\newpage
+% КОНЕЦ СОДЕРЖАНИЯ 
+ 
+% ЗАДАНИЕ 1
+\newpage
+\section{Задание №1. Построить конечный автомат, распознающий язык.}
+\begin{enumerate}
+\item {$L = \{ w \in \{a,b,c\}*$ | $  {|w|_c} = 1 \} $}\\
+\ Данный язык включает все слова из букв $\left\{ a, b, c \right\}$, но содержащие только одну букву $c$.  \\
+\digraph[scale=1]{task11}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1;
+	node [shape=doublecircle]; 2;
+	start -> 1;
+	1 -> 2 [label = "c"];
+	1 -> 1 [label = "a,b"];
+	2 -> 2 [label = "a,b"];
+}
+
+\item {$L = \{ w \in \{a,b\}*$ | $  {|w|_a} \le 2, {|w|_b} \ge 2 \}$}\\ 
+\ В данном случае может быть 1 или 2 буквы а и любое количество букв b, начиная с двух\\
+\digraph[scale=0.8]{task12}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1 2 4 5 7 8;
+	node [shape=doublecircle]; 3 6 9;
+	start -> 1;
+	1 -> 2 [label = "b"];
+	1 -> 4 [label = "a"];
+	2 -> 3 [label = "b"];
+	2 -> 5 [label = "a"];
+	3 -> 3 [label = "b"];
+	3 -> 6 [label = "a"];
+
+	4 -> 5 [label = "b"];
+	4 -> 7 [label = "a"];
+	5 -> 6 [label = "b"];
+	5 -> 8 [label = "a"];
+	6 -> 6 [label = "b"];
+	6 -> 9 [label = "a"];
+
+	7 -> 8 [label = "b"];
+	8 -> 9 [label = "b"];
+	9 -> 9 [label = "b"];
+}
+
+\item {$L = \{ w \in \{a,b\}*$ | $  {|w|_a} \ne {|w|_b}  \}$} \\
+\ Для данного задания построить автомат нельзя, т.к. для распознавания этого языка требуется запоминать количество символов.\\
+
+\item {$L = \{ w \in \{a,b\}*$ | $  {ww = www} \}$} \\
+\ В данном задании язык может состоять только из пустых символов. \\
+\digraph[scale=1]{task14}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=doublecircle]; 1;
+	start -> 1;
+}
+\end{enumerate}
+
+
+
+% ЗАДАНИЕ 2
+\section{Задание №2. Построить конечный автомат, используя прямое произведение.}
+\begin{enumerate}
+
+\item {$L_1 = \{ w \in \{a,b\}  $ | $  {|w|_a} \ge 2  \wedge   {|w|_b} \ge 2 \} $}\\
+\ Построим автомат: 
+$L_1_1 = \{ w \in \{a,b\}  $ | $  {|w|_a} \ge 2 \} $ \\
+\digraph[scale=1]{task211}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1 2;
+	node [shape=doublecircle]; 3;
+	start -> 1;
+	1 -> 2 [label = "a"];
+	1 -> 1 [label = "b"];
+	2 -> 3 [label = "a"];
+	2 -> 2 [label = "b"];
+	3 -> 3 [label = "a,b"];
+}
+\\
+\ Построим автомат:
+$L_1_2 = \{ w \in \{a,b\}  $ | $  {|w|_b} \ge 2 \} $ \\
+\digraph[scale=1]{task212}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1 2;
+	node [shape=doublecircle]; 3;
+	start -> 1;
+	1 -> 2 [label = "b"];
+	1 -> 1 [label = "a"];
+	2 -> 3 [label = "b"];
+	2 -> 2 [label = "a"];
+	3 -> 3 [label = "a,b"];
+} \\
+\ Для первого автомата: \\
+$ A_{1} = \left\{ w \in \left\{ a, b \right\}^{*} \mid \left| w \right|_{a} \geq 2 \right\} $
+$ \Sigma_{A} = \left\{ a, b \right\}$
+$ Q_{A} = \left\{ 1, 2, 3 \right\} $
+$ s_{A} = \left\{ 1 \right\} $
+$ T_{A} = \left\{ 3 \right\}$
+
+\ Для второго автомата: \\
+$ B_{1} = \left\{ w \in \left\{ a, b \right\}^{*} \mid \left| w \right|_{b} \geq 2 \right\} $
+
+$ \Sigma_{B} = \left\{ a, b \right\}$
+$ Q_{B} = \left\{ 1, 2, 3 \right\} $
+$ s_{B} = \left\{ 1 \right\} $
+$ T_{B} = \left\{ 3 \right\}$
+
+\ Имеем: \\
+$L_{1} = A_{1} \times B_{1}$ \\
+$ \Sigma = \Sigma_{A} \cup \Sigma_{B} = \left\{ a, b \right\}$ \\
+$ Q = Q_{A} \times Q_{B} = \left\{ 11, 12, 13, 21, 22, 23, 31, 32, 33 \right\}$ \\
+$ s = <s_{1}, s_{2}> = \left\{ 11 \right\}$ \\
+$ T = T_{A} \times T_{B} = \left\{ 33 \right\}$ \\
+\\ \\
+\ Построим таблицу состояний: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+$A$ & $B$ & $a$ & $b$ \\ \hline
+1   & 1   & 21  & 12  \\ \hline
+1   & 2   & 22  & 13  \\ \hline
+1   & 3   & 23  & 13  \\ \hline
+2   & 1   & 31  & 22  \\ \hline
+2   & 2   & 32  & 23  \\ \hline
+2   & 3   & 33  & 23  \\ \hline
+3   & 1   & 31  & 32  \\ \hline
+3   & 2   & 32  & 33  \\ \hline
+3   & 3   & 33  & 33  \\ \hline
+\end{tabular}
+\end{table}
+
+\ Тогда имеем автомат: \\
+\digraph[scale=0.8]{task213}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 11 12 13 21 22 23 31 32;
+	node [shape=doublecircle]; 33;
+	start -> 11;
+	11 -> 12 [label = "b"];
+	11 -> 21 [label = "a"];
+	12 -> 13 [label = "b"];
+	12 -> 22 [label = "a"];
+	13 -> 13 [label = "b"];
+	13 -> 23 [label = "a"];
+
+	21 -> 22 [label = "b"];
+	21 -> 31 [label = "a"];
+	22 -> 23 [label = "b"];
+	22 -> 32 [label = "a"];
+	23 -> 23 [label = "b"];
+	23 -> 33 [label = "a"];
+
+	31 -> 32 [label = "b"];
+	31 -> 31 [label = "a"];
+	32 -> 33 [label = "b"];
+	32 -> 32 [label = "a"];
+	33 -> 33 [label = "b"];
+}
+\\
+\item {$L_2 = \{ w \in \{a,b\}*$ | $  {|w|} \ge 3 \wedge {|w|} $ нечётное $ \} $}\\
+\ Построим автомат: \\
+\digraph[scale=1]{task221}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1;
+	node [shape=circle]; 2;
+	node [shape=circle]; 3;
+	node [shape=doublecircle]; 4;
+	start -> 1;
+	1 -> 2 [label = "a,b"];
+	2 -> 3 [label = "a,b"];
+	3 -> 4 [label = "a,b"];
+	4 -> 4 [label = "a,b"];
+}
+\\
+\ Построим автомат: \\
+\digraph[scale=1]{task222}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1;
+	node [shape=doublecircle]; 2;
+	start -> 1;
+	1 -> 2 [label = "a,b"];
+	2 -> 1 [label = "a,b"];
+}
+\\
+\ Для первого автомата: \\
+$ A_{2} = \left\{ w \in \left\{ a, b \right\}^{*} \mid \left| w \right| \geq 3 \right\} $ \\
+$ \Sigma_{A} = \left\{ a, b \right\}$ \\
+$ Q_{A} = \left\{ 1, 2, 3, 4 \right\} $ \\
+$ s_{A} = \left\{ 1 \right\} $ \\
+$ T_{A} = \left\{ 4 \right\}$ \\
+\\
+\ Для второго автомата: \\
+$ B_{2} = \left\{ w \in \left\{ a, b \right\}^{*} \mid  \left| w \right| \text{нечетное} \right\} $ \\
+$ \Sigma_{B} = \left\{ a, b \right\}$ \\
+$ Q_{B} = \left\{ 1, 2 \right\} $ \\
+$ s_{B} = \left\{ 1 \right\} $ \\
+$ T_{B} = \left\{ 2 \right\}$ \\
+\\
+\ Тогда имеем: \\
+$L_{2} = A_{2} \times B_{2}$ \\
+$ \Sigma = \left\{ a, b \right\}$ \\
+$ Q = \left\{ 11, 12, 21, 22, 31, 32, 41, 42 \right\}$ \\
+$ s = \left\{ 11 \right\}$ \\
+$ T = \left\{ 42 \right\}$ \\
+\\ \\ \\
+\ Построим таблицу состояний: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+$A$ & $B$ & $a$ & $b$ \\ \hline
+1   & 1   & 22  & 22  \\ \hline
+1   & 2   & 21  & 21  \\ \hline
+2   & 1   & 32  & 32  \\ \hline
+2   & 2   & 31  & 31  \\ \hline
+3   & 1   & 42  & 42  \\ \hline
+3   & 2   & 41  & 41  \\ \hline
+4   & 1   & 42  & 42  \\ \hline
+4   & 2   & 41  & 41  \\ \hline
+\end{tabular}
+\end{table}
+
+\ Тогда имеем автомат: \\
+\digraph[scale=0.8]{task223}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 11 12 21 22 31 32 41;
+	node [shape=doublecircle]; 42;
+	start -> 11;
+	11 -> 22 [label = "a,b"];
+	12 -> 21 [label = "a,b"];
+	21 -> 32 [label = "a,b"];
+	22 -> 31 [label = "a,b"];
+	31 -> 42 [label = "a,b"];
+	32 -> 41 [label = "a,b"];
+	41 -> 42 [label = "a,b"];
+	42 -> 41 [label = "a,b"];
+
+}
+
+\item {$L_3$ = \{ $w$ \in \{$a,b$\}$*$ $|$  $ {|w|_a}$ чётно  $\wedge$ ${|w|_b}$ кратно трём \} }\\
+\ Построим автомат: \\
+\digraph[scale=1]{task231}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 2;
+	node [shape=doublecircle]; 1;
+	start -> 1;
+	1 -> 1 [label = "b"];
+	1 -> 2 [label = "a"];
+	2 -> 2 [label = "b"];
+	2 -> 1 [label = "a"];
+}
+\ Построим автомат: \\
+\digraph[scale=1]{task232}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 2 3;
+	node [shape=doublecircle]; 1;
+	start -> 1;
+	1 -> 1 [label = "a"];
+	1 -> 2 [label = "b"];
+	2 -> 2 [label = "a"];
+	2 -> 3 [label = "b"];
+	3 -> 3 [label = "a"];
+	3 -> 1 [label = "b"];
+}
+\ Для первого автомата: \\
+$ A_{3} = \left\{ w \in \left\{ a, b \right\}^{*} \mid \left| w \right|_{a} \text{четное} \right\} $ \\
+$ \Sigma_{A} = \left\{ a, b \right\}$ \\
+$ Q_{A} = \left\{ 1, 2 \right\} $ \\
+$ s_{A} = \left\{ 1 \right\} $ \\
+$ T_{A} = \left\{ 1 \right\}$ \\
+\\
+\ Для второго автомата: \\
+$ B_{3} = \left\{ w \in \left\{ a, b \right\}^{*} \mid  \left| w \right|_{b} \text{кратно трем} \right\} $ \\
+$ \Sigma_{B} = \left\{ a, b \right\}$ \\
+$ Q_{B} = \left\{ 1, 2, 3 \right\} $ \\
+$ s_{B} = \left\{ 1 \right\} $ \\
+$ T_{B} = \left\{ 1 \right\}$ \\
+\ Имеем: \\
+$L_{3} = A_{3} \times B_{3}$ \\
+$ \Sigma_{3} = \left\{ a, b \right\}$ \\
+$ Q_{3} = \left\{ 11, 12, 13, 21, 22, 23 \right\}$ \\
+$ s_{3} = \left\{ 11 \right\}$ \\
+$ T_{3} = \left\{ 11 \right\}$ \\
+\\ \ Построим таблицу состояний: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+$A$ & $B$ & $a$ & $b$ \\ \hline
+1   & 1   & 21  & 12  \\ \hline
+1   & 2   & 22  & 13  \\ \hline
+1   & 3   & 23  & 11  \\ \hline
+2   & 1   & 11  & 22  \\ \hline
+2   & 2   & 12  & 23  \\ \hline
+2   & 3   & 13  & 21  \\ \hline
+\end{tabular}
+\end{table}
+
+\ Тогда имеем автомат: \\
+\digraph[scale=0.8]{task233}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 12 13 21 22 23;
+	node [shape=doublecircle]; 11;
+	start -> 11;
+	11 -> 12 [label = "b"];
+	11 -> 21 [label = "a"];
+	12 -> 13 [label = "b"];
+	12 -> 22 [label = "a"];
+	13 -> 11 [label = "b"];
+	13 -> 23 [label = "a"];
+
+	21 -> 22 [label = "b"];
+	21 -> 11 [label = "a"];
+	22 -> 23 [label = "b"];
+	22 -> 12 [label = "a"];
+	23 -> 21 [label = "b"];
+	23 -> 13 [label = "a"];
+}
+
+\item {$L_4$ = $\overline{L_3}$}\\
+\ Данный язык будет распознаяаться автоматом: \\
+\digraph[scale=0.8]{task24}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=doublecircle]; 12 13 21 22 23;
+	node [shape=circle]; 11;
+	start -> 11;
+	11 -> 12 [label = "b"];
+	11 -> 21 [label = "a"];
+	12 -> 13 [label = "b"];
+	12 -> 22 [label = "a"];
+	13 -> 11 [label = "b"];
+	13 -> 23 [label = "a"];
+
+	21 -> 22 [label = "b"];
+	21 -> 11 [label = "a"];
+	22 -> 23 [label = "b"];
+	22 -> 12 [label = "a"];
+	23 -> 21 [label = "b"];
+	23 -> 13 [label = "a"];
+}
+$ \bar{L_{3}} = \left\{ \Sigma_{3}, Q_{3}, s_{3}, Q_{3}\backslash T_{3}, \delta_{3} \right\} $ \\
+$ T_{4} = Q_{3} \backslash T_{3} = \left\{ 12, 13, 21, 22, 23 \right\} $ \\
+
+\item {$L_5 = L_2 \setminus L_3 $}\\
+$ L_{5} = L_{2} \backslash L_{3} = L_{2} \cap \bar{L_{3}} = L_{2} \times \bar{L_{3}} $ \\
+\ Автомат $ L_{2} $ можно успростить: \\
+\digraph[scale=1]{task251}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=circle]; 1 2 3;
+	node [shape=doublecircle]; 4;
+	start -> 1;
+	1 -> 2 [label = "a,b"];
+	2 -> 3 [label = "a,b"];
+	3 -> 4 [label = "a,b"];
+	4 -> 3 [label = "a,b"];
+}
+
+\ Введем для автомата $ \bar{L_{3}} $ новую нумерацию состояний:\\
+\digraph[scale=0.8]{task252}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=doublecircle]; 2 3 4 5 6;
+	node [shape=circle]; 1;
+	start -> 1;
+	1 -> 2 [label = "b"];
+	1 -> 4 [label = "a"];
+	2 -> 3 [label = "b"];
+	2 -> 5 [label = "a"];
+	3 -> 1 [label = "b"];
+	3 -> 6 [label = "a"];
+
+	4 -> 5 [label = "b"];
+	4 -> 1 [label = "a"];
+	5 -> 6 [label = "b"];
+	5 -> 2 [label = "a"];
+	6 -> 4 [label = "b"];
+	6 -> 3 [label = "a"];
+}
+\newpage
+\ Построим таблицу состояний: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+$L_{2}$ & $\bar{L_{3}}$ & $a$ & $b$ \\ \hline
+1       & 1             & 24  & 22  \\ \hline
+1       & 2             & 25  & 23  \\ \hline
+1       & 3             & 26  & 21  \\ \hline
+1       & 4             & 21  & 25  \\ \hline
+1       & 5             & 22  & 26  \\ \hline
+1       & 6             & 23  & 24  \\ \hline
+2       & 1             & 34  & 32  \\ \hline
+2       & 2             & 35  & 33  \\ \hline
+2       & 3             & 36  & 31  \\ \hline
+2       & 4             & 31  & 35  \\ \hline
+2       & 5             & 32  & 36  \\ \hline
+2       & 6             & 33  & 34  \\ \hline
+3       & 1             & 44  & 42  \\ \hline
+3       & 2             & 45  & 43  \\ \hline
+3       & 3             & 46  & 41  \\ \hline
+3       & 4             & 41  & 45  \\ \hline
+3       & 5             & 42  & 46  \\ \hline
+3       & 6             & 43  & 44  \\ \hline
+4       & 1             & 34  & 32  \\ \hline
+4       & 2             & 35  & 33  \\ \hline
+4       & 3             & 36  & 31  \\ \hline
+4       & 4             & 31  & 35  \\ \hline
+4       & 5             & 32  & 36  \\ \hline
+4       & 6             & 33  & 34  \\ \hline
+\end{tabular}
+\end{table} 
+\\
+\ Получим автомат: \\
+\digraph[scale=0.5]{task253}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=doublecircle]; 42 43 45 46;
+	node [shape=circle]; 11 12 13 14 15 16 21 22 23 24 25 26 31 32 33 34 35 36 41 44;
+	start -> 11;
+	11 -> 24 [label="a"]
+	12 -> 25 [label="a"]
+	13 -> 26 [label="a"]
+	14 -> 21 [label="a"]
+	15 -> 22 [label="a"]
+	16 -> 23 [label="a"]
+	21 -> 34 [label="a"]
+	22 -> 35 [label="a"]
+	23 -> 36 [label="a"]
+	24 -> 31 [label="a"]
+	25 -> 32 [label="a"]
+	26 -> 33 [label="a"]
+	31 -> 44 [label="a"]
+	32 -> 45 [label="a"]
+	33 -> 46 [label="a"]
+	34 -> 41 [label="a"]
+	35 -> 42 [label="a"]
+	36 -> 43 [label="a"]
+	41 -> 34 [label="a"]
+	42 -> 35 [label="a"]
+	43 -> 36 [label="a"]
+	44 -> 31 [label="a"]
+	45 -> 32 [label="a"]
+	46 -> 33 [label="a"]
+	
+	11 -> 22 [label="b"]
+	12 -> 23 [label="b"]
+	13 -> 21 [label="b"]
+	14 -> 25 [label="b"]
+	15 -> 26 [label="b"]
+	16 -> 24 [label="b"]
+	21 -> 32 [label="b"]
+	22 -> 33 [label="b"]
+	23 -> 31 [label="b"]
+	24 -> 35 [label="b"]
+	25 -> 36 [label="b"]
+	26 -> 34 [label="b"]
+	31 -> 42 [label="b"]
+	32 -> 43 [label="b"]
+	33 -> 41 [label="b"]
+	34 -> 45 [label="b"]
+	35 -> 46 [label="b"]
+	36 -> 44 [label="b"]
+	41 -> 32 [label="b"]
+	42 -> 33 [label="b"]
+	43 -> 31 [label="b"]
+	44 -> 35 [label="b"]
+	45 -> 36 [label="b"]
+	46 -> 34 [label="b"]
+}
+\ После упрощения получим: \\
+\digraph[scale=0.5]{task254}{
+	rankdir=LR; 
+	node [shape=none]; start;
+	node [shape=doublecircle]; 42 43 45 46;
+	node [shape=circle]; 11 21 22 24 31 32 33 34 35 36 41 44;
+	start -> 11;
+	11 -> 24 [label="a"]
+	21 -> 34 [label="a"]
+	22 -> 35 [label="a"]
+	24 -> 31 [label="a"]
+	31 -> 44 [label="a"]
+	32 -> 45 [label="a"]
+	33 -> 46 [label="a"]
+	34 -> 41 [label="a"]
+	35 -> 42 [label="a"]
+	36 -> 43 [label="a"]
+	41 -> 34 [label="a"]
+	42 -> 35 [label="a"]
+	43 -> 36 [label="a"]
+	44 -> 31 [label="a"]
+	45 -> 32 [label="a"]
+	46 -> 33 [label="a"]
+
+	11 -> 22 [label="b"]
+	21 -> 32 [label="b"]
+	22 -> 33 [label="b"]
+	24 -> 35 [label="b"]
+	31 -> 42 [label="b"]
+	32 -> 43 [label="b"]
+	33 -> 41 [label="b"]
+	34 -> 45 [label="b"]
+	35 -> 46 [label="b"]
+	36 -> 44 [label="b"]
+	41 -> 32 [label="b"]
+	42 -> 33 [label="b"]
+	43 -> 31 [label="b"]
+	44 -> 35 [label="b"]
+	45 -> 36 [label="b"]
+	46 -> 34 [label="b"]
+}
+
+\end{enumerate}
+
+\section{Задание №3. Построить минимальный ДКА по регулярному выражению.}
+
+\begin{enumerate}
+\item \((ab + aba)^{*}a\) \\
+\ Сначала составим недетерминированный автомат: \\
+\digraph[scale=1]{task311}{
+    rankdir=LR; 
+    node [shape = none]; start;
+    node [shape = doublecircle]; 2;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "a"];
+    1 -> 3 [label = "a"];
+    1 -> 4 [label = "a"];
+    3 -> 1 [label = "b"];
+    4 -> 5 [label = "b"];
+    5 -> 1 [label = "a"];
+}
+
+\ Теперь его необходимо преобразовать в детерминированный. Будем использтвать алгоритм Томпсона для построения эквивалентного ДКА: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{ |c|c|c| } 
+\hline
+\(Q\) & \(a\) & \(b\) \\ \hline
+1 & 234 & - \\ \hline
+234 & - & 15 \\ \hline
+15 & 1234 & - \\ \hline
+1234 & 234 & 15 \\ \hline
+\end{tabular}
+\end{table}
+
+\ Тогда имеем детерминированный (и минимальный) автомат: \\
+\begin{center}
+\digraph[scale=1]{task312}{
+    rankdir=LR; 
+    node [shape = none]; start;
+    node [shape = doublecircle]; 234 1234;
+    node [shape = circle];
+    start -> 1;
+    1 -> 234 [label = "a"];
+    234 -> 15 [label = "b"];
+    15 -> 1234 [label = "a"];
+    1234 -> 234 [label = "b"];
+    1234 -> 15 [label = "b"];
+}  
+\end{center}
+
+\item \(a(a(ab)^{*}b)^{*}(ab)^{*}\)\\
+\ НКА: \\
+\begin{center}
+\digraph[scale=0.5]{task321}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 2 5;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "a"];
+    2 -> 3 [label = "a"];
+    2 -> 5 [label = "a"];
+    3 -> 4 [label = "a"];
+    4 -> 3 [label = "b"];
+    3 -> 2 [label = "b"];
+    5 -> 2 [label = "b"];
+}  
+\end{center}
+
+\ Используем алгоритм Томпсона для построения эквивалентного ДКА: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{ |c|c|c| } 
+\hline
+\(Q\) & \(a\) & \(b\) \\ \hline
+1 & 2 & - \\ \hline
+2 & 35 & - \\ \hline 
+35 & 4 & 2 \\ \hline
+4 & - & 3 \\ \hline
+3 & 4 & 2 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{center}
+\digraph[scale=1]{task322}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 2;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "a"];
+    2 -> 35 [label = "a"];
+    35 -> 4 [label = "a"];
+    35 -> 2 [label = "b"];
+    4 -> 3 [label = "b"];
+    3 -> 4 [label = "a"];
+    3 -> 2 [label = "b"];
+}  
+\end{center}
+
+\ Минимизируем автомат, определив пары различимых состояний: \\ \\ \\ \\ \\ \\ 
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{ |c|c|c|c|c|c|c| } 
+\hline
+ & 1 & 2 & 3 & 35 & 4 \\ \hline
+1  &   & + & + & + & + \\ \hline
+2  & + &  & + & + & + \\ \hline
+3  & + & + &  &  & + \\ \hline
+35 & + & + &  &  & + \\ \hline
+4 & + & + & + & + &  \\ \hline
+\end{tabular}
+\end{table}
+
+\ Различимые состояния: \(\{1, 2, 3, 335, 4\}\) \\
+\ Перестроим автомат, теперь он будет минимальным: \\
+\begin{center}
+\digraph[scale=1]{task323}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 2;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "a"];
+    2 -> 335 [label = "a"];
+    335 -> 4 [label = "a"];
+    335 -> 2 [label = "b"];
+    4 -> 335 [label = "b"];
+}  
+\end{center}
+
+\item \((a + (a + b)(a + b)b)^*\)\\
+\ НКА: \\
+\begin{center}
+\digraph[scale=1]{task341}{
+    rankdir=LR; 
+    node [shape = none]; start;
+    node [shape = doublecircle]; 1;
+    node [shape = circle];
+    start -> 1;
+    1 -> 1 [label = "a"];
+    1 -> 2 [label = "a, b"];
+    2 -> 3 [label = "a, b"];
+    3 -> 1 [label = "b"];
+}  
+\end{center}
+
+\ Используем алгоритм Томпсона для построения эквивалентного ДКА: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{ |c|c|c| } 
+\hline
+\(Q\) & \(a\) & \(b\) \\ \hline
+1 & 12 & 2 \\ \hline
+12 & 123 & 23 \\ \hline
+2 & 3 & 3 \\ \hline
+123 & 123 & 123 \\ \hline
+23 & 3 & 13 \\ \hline
+3 & - & 1 \\ \hline
+13 & 12 & 12 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{center}
+\digraph[scale=1]{task342}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 1 12 13 123;
+    node [shape = circle];
+    start -> 1;
+    1 -> 12 [label = "a"];
+    1 -> 2 [label = "b"];
+    12 -> 123 [label = "a"];
+    12 -> 23 [label = "b"];
+    2 -> 3 [label = "a, b"];
+    123 -> 123 [label = "a, b"];
+    23 -> 3 [label = "a"];
+    23 -> 13 [label = "b"];
+    3 -> 1 [label = "b"];
+    13 -> 12 [label = "a, b"];
+}  
+\end{center}
+
+\ Минимизируем автомат, определив пары различимых состояний: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+\hline
+    & 1 & 12 & 13 & 123 & 2 & 23 & 3 \\ \hline
+1   &   &   &     &     & + &  + & + \\ \hline
+12  &   &   &     &     & + &  + & + \\ \hline
+13  &   &   &     &     & + &  + & + \\ \hline
+123 &   &   &     &     & + &  + & + \\ \hline
+2   & + & + &  +  &  +  &   &    & + \\ \hline
+23  & + & + &  +  &  +  &   &    & + \\ \hline
+3   & + & + &  +  &  +  & + & +  &   \\ \hline
+\end{tabular}
+\end{table}
+
+\item \((b+c)((ab)^*c + (ba)^*)^*\)\\
+\ ДКА: \\
+\begin{center}
+\digraph[scale=0.7]{task331}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 2 5 7;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "b, c"];
+    2 -> 3 [label = "a"];
+    2 -> 6 [label = "b"];
+    3 -> 4 [label = "b"];
+    4 -> 5 [label = "c"];
+    4 -> 3 [label = "a"];
+    5 -> 3 [label = "a"];
+    5 -> 6 [label = "b"];
+    6 -> 7 [label = "a"];
+    7 -> 3 [label = "a"];
+    7 -> 6 [label = "b"];
+}  
+\end{center}
+
+\ Минимизируем автомат, определив пары различимых состояний: \\
+\begin{table}[!htbp]
+\rowcolors{2}{white}{blue!10}
+\centering
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+\hline
+  & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+1 &   & + & + & + & + & + & + \\ \hline
+2 & + &   & + & + &   & + &   \\ \hline
+3 & + & + &   & + & + & + & + \\ \hline
+4 & + & + & + &   & + & + & + \\ \hline
+5 & + &   & + & + &   & + &   \\ \hline
+6 & + & + & + & + & + &   & + \\ \hline
+7 & + &   & + & + &   & + &   \\ \hline
+\end{tabular}
+\end{table}
+
+\ Различимые состояния: \(\{1, 257, 3, 4, 5, 6\}\) \\
+\ Перестроим автомат, теперь он будет минимальным: \\
+\begin{center}
+\digraph[scale=1]{task332}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 257;
+    node [shape = circle];
+    start -> 1;
+    1 -> 257 [label = "b, c"];
+    257 -> 3 [label = "a"];
+    257 -> 6 [label = "b"];
+    3 -> 4 [label = "b"];
+    4 -> 257 [label = "c"];
+    4 -> 3 [label = "a"];
+    6 -> 257 [label = "a"];
+}  
+\end{center}
+
+\item \((a+b)^+(aa + abab + bb + baba)(a+b)^+\)\\
+\ НКА: \\
+\begin{center}
+\digraph[scale=0.6]{task351}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 13;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "a, b"];
+    2 -> 1 [label = "a, b"];
+    2 -> 3 [label = "a"];
+    2 -> 8 [label = "b"];
+    3 -> 4 [label = "a"];
+    3 -> 5 [label = "b"];
+    4 -> 13 [label = "a, b"];
+    5 -> 6 [label = "a"];
+    6 -> 7 [label = "b"];
+    7 -> 13 [label = "a, b"];
+    8 -> 9 [label = "b"];
+    8 -> 10 [label = "a"];
+    9 -> 13 [label = "a, b"];
+    10 -> 11 [label = "b"];
+    11 -> 12 [label = "a"];
+    12 -> 13 [label = "a, b"];
+}  
+\end{center}
+
+\end {enumerate}
+
+\section{Задание №4. Определить является ли язык регулярным или нет.}
+\begin{enumerate}
+\item \(L=\{(aab)^{n}b(aba)^{m} : n \geqslant 0, m \geqslant 0\}\)\\
+\ Т.к. по этому языку можно составить ДКА, он является регулярным: \\
+\begin{center}
+\digraph[scale=0.6]{task411}{
+    rankdir=LR;
+    node [shape = none]; start;
+    node [shape = doublecircle]; 5 8;
+    node [shape = circle];
+    start -> 1;
+    1 -> 2 [label = "a"];
+    1 -> 5 [label = "b"];
+    2 -> 3 [label = "a"];
+    3 -> 4 [label = "b"];
+    4 -> 5 [label = "b"];
+    4 -> 2 [label = "a"];
+    5 -> 6 [label = "a"]; 
+    6 -> 7 [label = "b"];
+    7 -> 8 [label = "a"];
+    8 -> 5 [label = "a"];
+}  
+\end{center}
+
+\item \(L = \{uaav : u \in \{a, b\}^*, \; v \in \{a, b\}^*, |u|_b \geqslant |v|_a\}\)\\
+\ Используем лемму о разрастании. Фиксируем \(\forall n \in \mathbb{N} \), далее рассмотрим слово \(\omega = b^{n}aaa^{n}, \; |\omega| = 2n + 2 \geq n\). Теперь рассмотрим все разбиения этого слова \(\omega = xyz\) такие, что \(|y| \neq 0, \; |xy| \leq n\): \\
+$$x = b^{k}, \; y = b^{l}, \; z = b^{n - k - l}aaa^n,$$ 
+\begin{center}
+где \(1 \leq k + l \leq n \; \wedge \; l > 0\)
+\end{center}
+\ Иных удовлетворяющих данным условиям разбиений нет. \\
+\ Для любого из таких разбиений слово \(xy^0z \notin L\). => лемма не выполняется, а значит, \(L\) не является регулярным языком. \\
+
+\item \(L = \{a^mw : w \in \{a, b\}^{*}, \; 1 \geqslant |w|_b \geqslant m\}\)\\
+\ Используем лемму о разрастании. Фиксируем \(\forall n \in \mathbb{N} \), далее рассмотрим слово \(\omega = a^nb^n, \; |\omega| = 2n \geqslant n\). Теперь рассмотрим все разбиения этого слова \(\omega = xyz\) такие, что \(|y| \neq 0, \; |xy| \leq n\): \\
+$$x = a^{l}, \; y = a^{m}, \; z = a^{n-l-m}b^{n},$$ 
+\begin{center}
+где \(l + k \leqslant n \; \wedge \; m \ne 0\)
+\end{center} 
+\ Иных удовлетворяющих данным условиям разбиенний нет. \\ 
+\ Выполним накачку: \\
+$$xy^{i}z = a^{l}(a^{m})^{i}a^{n-l-m}b^{n} = a^{n-mi}b^{n} \notin L, \; i 
+\geqslant 0 \in \mathbb{N} $$
+\ Видим, что лемма не выполняется, а значит, \(L\) не является регулярным языком. \\
+
+\item \(L = \{a^{k}b^{m}a^{n} : k = n \vee m > 0\}\)\\
+\ Используем лемму о разрастании. Фиксируем \(\forall n \in \mathbb{N} \), далее рассмотрим слово \(\omega = a^nba^n, \; |\omega| = 2n + 1 \geqslant n\). Теперь рассмотрим все разбиения этого слова \(\omega = xyz\) такие, что \(|y| \neq 0, \; |xy| \leq n\): \\
+$$x = a^{k}, \; y = a^{m}, \; z = a^{n-k-m}ba^{n},$$ 
+\begin{center}
+где \(k + m \leqslant n \; \wedge \; m \ne 0\)
+\end{center} 
+\ Иных удовлетворяющих данным условиям разбиенний нет. \\ 
+\ Выполним накачку: \\ 
+$$xy^{i}z = a^{k}(a^{m})^{i}a^{n-k-m}ba^{n} = a^{n+m(i-1)}ba^{n} \notin L, \; i 
+\geqslant 2 \in \mathbb{N} $$
+\ Получили противоречие => лемма не выполняется, а значит, \(L\) не является регулярным языком. \\
+
+\item \(L = \{ucv : u \in \{a, b\}^*, \; v \in \{a, b\}^*, u \ne v^R \}\)\\
+\ Используем лемму о разрастании. Фиксируем \(\forall n \in \mathbb{N} \), далее рассмотрим слово \(\omega = (ab)^nc(ab)^n = \alpha_1\alpha_2...\alpha_{4n+1}, \; |\omega| = 4n + 1 \geqslant n\). Теперь рассмотрим все разбиения этого слова \(\omega = xyz\) такие, что \(|y| \neq 0, \; |xy| \leq n\): \\
+$$x = \alpha_1\alpha_2...\alpha_k, \; y = \alpha_{k+1}...\alpha_{k+m}, \; z = \alpha_{k+m+1}...\alpha_{4n+1}c(ab)^n,$$
+\begin{center}
+где \(k + m \leqslant n \; \wedge \; m \ne 0\)
+\end{center} 
+\ Иных удовлетворяющих данным условиям разбиенний нет. \\ 
+\ Выполним накачку: \\
+$$xy^{i}z = (\alpha_1\alpha_2...\alpha_k)(\alpha_{k+1}...\alpha_{k+m})^i(\alpha_{k+m+1}...\alpha_{4n+1}c(ab)^n)$$
+\ При \(i = 2\) имеем: \\
+$$xy^{2}z = (\alpha_1\alpha_2...\alpha_k)(\alpha_{k+1}...\alpha_{k+m})^2(\alpha_{k+m+1}...\alpha_{4n+1}c(ab)^n) \notin L$$
+\ Видим, что лемма не выполняется, а значит, \(L\) не является регулярным языком. \\
+
+\end {enumerate}
+
+\end{document}
